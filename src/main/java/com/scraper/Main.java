@@ -12,15 +12,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
+    private static final int NUM_WORKERS = 10;
+
     public static void main(String[] args) throws Exception {
 
-        // Pobranie słowa kluczowego od użytkownika
         Scanner scanner = new Scanner(System.in);
         System.out.print("Podaj słowo kluczowe do scrapowania: ");
         String keyword = scanner.nextLine().trim();
 
         if (keyword.isEmpty()) {
-            System.out.println("Nie podano żadnego słowa kluczowego. Kończenie programu.");
+            System.out.println("Nie podano słowa kluczowego. Kończenie.");
             return;
         }
 
@@ -28,11 +29,17 @@ public class Main {
         Queue<Article> resultQueue = new ConcurrentLinkedQueue<>();
         AtomicInteger counter = new AtomicInteger(0);
 
-        // Wczytanie URLi z pliku resources/urls.txt
+        // === GLOBALNY HANDLER DLA NIEZŁAPANYCH WYJĄTKÓW W WĄTKACH ===
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            System.err.println("Błąd w wątku [" + thread.getName() + "]: " + throwable.getMessage());
+            throwable.printStackTrace();
+        });
+
+        // === Wczytaj bazowe URLe ===
         List<String> baseUrls = new ArrayList<>();
         try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("urls.txt")) {
             if (inputStream == null) {
-                System.out.println("Plik 'urls.txt' nie został znaleziony w katalogu resources.");
+                System.out.println("Plik 'urls.txt' nie został znaleziony.");
                 return;
             }
             try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -43,33 +50,67 @@ public class Main {
             }
         }
 
-        // Produkcja URLi do odwiedzenia na podstawie słowa kluczowego
-        Thread producerThread = new Thread(new UrlProducer(taskQueue, baseUrls, keyword));
+        // === PRODUCENT ===
+        Thread producerThread = new Thread(() -> {
+            String threadName = Thread.currentThread().getName();
+            System.out.println("[" + threadName + "] Startuję produkcję URLi...");
+            new UrlProducer(taskQueue, baseUrls, keyword).run();
+            System.out.println("[" + threadName + "] Zakończono produkcję URLi.");
+        }, "Producer-Thread");
+
+        producerThread.setUncaughtExceptionHandler((t, e) -> {
+            System.err.println("Błąd producenta [" + t.getName() + "]: " + e.getMessage());
+        });
+
         producerThread.start();
         producerThread.join();
 
         int totalTasks = taskQueue.size();
         if (totalTasks == 0) {
-            System.out.println("Nie znaleziono pasujących URLi dla słowa kluczowego: " + keyword);
+            System.out.println("Brak URLi do przetworzenia.");
             return;
         }
 
-        System.out.println("Znaleziono " + totalTasks + " URLi. Rozpoczynanie scrapowania...");
+        System.out.println("Znaleziono " + totalTasks + " URLi. Uruchamiam " + NUM_WORKERS + " scraperów...");
 
-        // Uruchomienie workerów
-        int numWorkers = 5;
+        // === WORKERZY ===
         List<Thread> workers = new ArrayList<>();
-        for (int i = 0; i < numWorkers; i++) {
-            Thread worker = new Thread(new ScraperWorker(taskQueue, resultQueue, counter, totalTasks));
+        for (int i = 0; i < NUM_WORKERS; i++) {
+            int id = i + 1;
+            Thread worker = new Thread(() -> {
+                String name = Thread.currentThread().getName();
+                System.out.println("[" + name + "] Rozpoczynam pracę.");
+                try {
+                    new ScraperWorker(taskQueue, resultQueue, counter, totalTasks).run();
+                } catch (Exception e) {
+                    System.err.println("[" + name + "] Wystąpił wyjątek: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                System.out.println("[" + name + "] Zakończono.");
+            }, "Scraper-Worker-" + id);
+
+            worker.setUncaughtExceptionHandler((t, e) -> {
+                System.err.println("Niezłapany wyjątek w wątku [" + t.getName() + "]: " + e.getMessage());
+            });
+
             workers.add(worker);
             worker.start();
         }
 
+        // === MONITOR WĄTKÓW ===
+        // Uruchamiamy ThreadMonitor zamiast tworzenia osobnego wątku monitorującego.
+        ThreadMonitor monitor = new ThreadMonitor(workers); // Tworzymy instancję monitorującego
+        Thread monitorThread = new Thread(monitor, "Monitor"); // Uruchamiamy wątek monitorujący
+        monitorThread.start(); // Startujemy wątek
+
+        // === Czekamy na zakończenie wszystkich workerów ===
         for (Thread worker : workers) {
             worker.join();
         }
 
-        // Zapis wyników do pliku JSON
+        // === ZAPIS JSON ===
+        System.out.println("Wszystkie wątki zakończone. Zapisuję JSON...");
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -80,6 +121,6 @@ public class Main {
             mapper.writeValue(writer, resultQueue);
         }
 
-        System.out.println("Dane zapisane do pliku: " + outputFileName);
+        System.out.println("Dane zapisane do: " + outputFileName);
     }
 }

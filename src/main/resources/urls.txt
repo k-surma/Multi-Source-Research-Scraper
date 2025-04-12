@@ -2,3 +2,5 @@ https://en.wikipedia.org/wiki/
 https://www.sciencedaily.com/news
 https://arxiv.org/list/cs.AI/recent
 https://www.nature.com
+https://en.wikipedia.org/
+https://www.pudelek.pl/
