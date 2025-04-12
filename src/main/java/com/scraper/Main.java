@@ -14,21 +14,25 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        if (args.length == 0) {
-            System.out.println("Please provide a search keyword as an argument.");
+        // Pobranie słowa kluczowego od użytkownika
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Podaj słowo kluczowe do scrapowania: ");
+        String keyword = scanner.nextLine().trim();
+
+        if (keyword.isEmpty()) {
+            System.out.println("Nie podano żadnego słowa kluczowego. Kończenie programu.");
             return;
         }
 
-        String keyword = args[0];
         Queue<String> taskQueue = new ConcurrentLinkedQueue<>();
         Queue<Article> resultQueue = new ConcurrentLinkedQueue<>();
         AtomicInteger counter = new AtomicInteger(0);
 
-        // Read base URLs from resources
+        // Wczytanie URLi z pliku resources/urls.txt
         List<String> baseUrls = new ArrayList<>();
         try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("urls.txt")) {
             if (inputStream == null) {
-                System.out.println("The file 'urls.txt' was not found in resources.");
+                System.out.println("Plik 'urls.txt' nie został znaleziony w katalogu resources.");
                 return;
             }
             try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -39,20 +43,20 @@ public class Main {
             }
         }
 
-        // Produce initial tasks based on keyword
+        // Produkcja URLi do odwiedzenia na podstawie słowa kluczowego
         Thread producerThread = new Thread(new UrlProducer(taskQueue, baseUrls, keyword));
         producerThread.start();
-        producerThread.join(); // wait until URLs are found
+        producerThread.join();
 
         int totalTasks = taskQueue.size();
         if (totalTasks == 0) {
-            System.out.println("No matching URLs found for keyword: " + keyword);
+            System.out.println("Nie znaleziono pasujących URLi dla słowa kluczowego: " + keyword);
             return;
         }
 
-        System.out.println("Found " + totalTasks + " relevant URLs. Starting scraper...");
+        System.out.println("Znaleziono " + totalTasks + " URLi. Rozpoczynanie scrapowania...");
 
-        // Start worker threads
+        // Uruchomienie workerów
         int numWorkers = 5;
         List<Thread> workers = new ArrayList<>();
         for (int i = 0; i < numWorkers; i++) {
@@ -65,7 +69,7 @@ public class Main {
             worker.join();
         }
 
-        // Write results to JSON
+        // Zapis wyników do pliku JSON
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -76,6 +80,6 @@ public class Main {
             mapper.writeValue(writer, resultQueue);
         }
 
-        System.out.println("Data written to " + outputFileName);
+        System.out.println("Dane zapisane do pliku: " + outputFileName);
     }
 }

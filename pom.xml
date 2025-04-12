@@ -22,8 +22,6 @@
             <version>1.17.2</version>
         </dependency>
 
-
-
         <!-- JSON mapper -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -31,18 +29,20 @@
             <version>2.15.2</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
 
+            <!-- Maven Assembly Plugin (for jar-with-dependencies) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -67,8 +67,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
-
-
 </project>
