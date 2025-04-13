@@ -1,73 +1,40 @@
 package com.scraper;
 
-// ZADANIE 2 - DO UZUPEŁNIENIA
+// ZADANIE 2
 
 public class Runner {
-
     public static void main(String[] args) throws InterruptedException {
 
-        // TODO: Stwórz tablicę 10 obiektów MyRun
-
-        MyRun[] runners = new MyRun[10];
 
 
-
-        // TODO: Stwórz tablicę 10 wątków
-
-        Thread[] threads = new Thread[10];
+        // TODO 1: Stwórz tablicę 10 MyRun
 
 
 
-        // TODO: Inicjalizuj obiekty MyRun i wątki
-
-        for (int i = 0; i < 10; i++) {
-
-            runners[i] = new MyRun(i);
-
-            threads[i] = new Thread(runners[i]);
-
-        }
+        // TODO 2: Stwórz tablicę 10 wątków
 
 
 
-        // TODO: Uruchom wszystkie wątki
-
-        for (int i = 0; i < 10; i++) {
-
-            threads[i].start();
-
-        }
+        // TODO 3: Inicjalizuj obiekty MyRun i wątki
 
 
 
-        // TODO: Poczekaj 2 sekundy
-
-        Thread.sleep(2000);
+        // TODO 4: Uruchom wszystkie wątki
 
 
 
-        // TODO: Zatrzymaj wszystkie wątki
-
-        for (int i = 0; i < 10; i++) {
-
-            runners[i].stop();
-
-        }
+        // TODO 5: Uśpij główny wątek na 2 sekundy
 
 
 
-        // TODO: Poczekaj aż wszystkie wątki się zakończą
-
-        for (int i = 0; i < 10; i++) {
-
-            threads[i].join();
-
-        }
+        // TODO 6: Zatrzymaj wszystkie wątki (wywołaj stop())
 
 
 
-        System.out.println("Wszystkie wątki zakończyły działanie.");
+        // TODO 7: Poczekaj aż wszystkie wątki się zakończą (join)
 
+
+
+        System.out.println("Wszystkie wątki zakończone.");
     }
-
 }
