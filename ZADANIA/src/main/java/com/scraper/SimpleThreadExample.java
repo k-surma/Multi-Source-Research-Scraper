@@ -1,6 +1,6 @@
 package com.scraper;
 
-// ZADANIE 3
+// ZADANIE 1
 
 public class SimpleThreadExample {
     public static void main(String[] args) {
@@ -9,8 +9,6 @@ public class SimpleThreadExample {
         Thread numberThread = new Thread(new Runnable() {
             // TU UZUPEŁNIJ
         });
-
-
 
         // TODO 2: Utwórz wątek wypisujący litery od A do E
 
@@ -23,10 +21,6 @@ public class SimpleThreadExample {
             }
         });
 
-
-
         // TODO 3: Uruchom oba wątki
-
     }
-
 }

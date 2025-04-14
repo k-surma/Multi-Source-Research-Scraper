@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// ZADANIE 3
+
 public class Main {
 
     private static final int TOTAL_NUMBERS = 100;
@@ -13,12 +15,7 @@ public class Main {
         List<Integer> numbers = new ArrayList<>();
         Random random = new Random();
 
-
-
         // TODO 1: Wygeneruj 100 losowych liczb (1–1000)
-
-
-
 
         // TODO 2: Uzupełnij dzielenie listy na równe części i tworzenie wątków
 
@@ -37,22 +34,15 @@ public class Main {
             // TODO: Dodaj wątek i worker do odpowiednich list
         }
 
-
-
         // TODO 3: Czekaj na zakończenie wszystkich wątków
-
-
 
         // TODO 4: Oblicz i wypisz łączną sumę
         int totalSum = 0;
 
         // UZUPEŁNIJ
 
-
         System.out.println("Suma wszystkich liczb: " + totalSum);
-
     }
-
 }
 
 
@@ -76,7 +66,6 @@ class SumWorker implements Runnable {
         }
         System.out.println("[Worker-" + workerId + "] Suma = " + sum);
     }
-
     public int getSum() {
         return sum;
     }

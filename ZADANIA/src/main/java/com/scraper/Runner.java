@@ -5,8 +5,6 @@ package com.scraper;
 public class Runner {
     public static void main(String[] args) throws InterruptedException {
 
-
-
         // TODO 1: Stwórz tablicę 10 MyRun
 
 
@@ -32,7 +30,6 @@ public class Runner {
 
 
         // TODO 7: Poczekaj aż wszystkie wątki się zakończą (join)
-
 
 
         System.out.println("Wszystkie wątki zakończone.");

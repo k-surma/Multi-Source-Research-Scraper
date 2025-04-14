@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
+
     private static final int NUM_WORKERS = 10;
 
     public static void main(String[] args) throws Exception {
