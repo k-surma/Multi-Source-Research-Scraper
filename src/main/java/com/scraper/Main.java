@@ -29,13 +29,11 @@ public class Main {
         Queue<Article> resultQueue = new ConcurrentLinkedQueue<>();
         AtomicInteger counter = new AtomicInteger(0);
 
-        // === GLOBALNY HANDLER DLA NIEZŁAPANYCH WYJĄTKÓW W WĄTKACH ===
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             System.err.println("Błąd w wątku [" + thread.getName() + "]: " + throwable.getMessage());
             throwable.printStackTrace();
         });
 
-        // === Wczytaj bazowe URLe ===
         List<String> baseUrls = new ArrayList<>();
         try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("urls.txt")) {
             if (inputStream == null) {
@@ -50,7 +48,6 @@ public class Main {
             }
         }
 
-        // === PRODUCENT ===
         Thread producerThread = new Thread(() -> {
             String threadName = Thread.currentThread().getName();
             System.out.println("[" + threadName + "] Startuję produkcję URLi...");
@@ -73,7 +70,6 @@ public class Main {
 
         System.out.println("Znaleziono " + totalTasks + " URLi. Uruchamiam " + NUM_WORKERS + " scraperów...");
 
-        // === WORKERZY ===
         List<Thread> workers = new ArrayList<>();
         for (int i = 0; i < NUM_WORKERS; i++) {
             int id = i + 1;
@@ -97,18 +93,14 @@ public class Main {
             worker.start();
         }
 
-        // === MONITOR WĄTKÓW ===
-        // Uruchamiamy ThreadMonitor zamiast tworzenia osobnego wątku monitorującego.
-        ThreadMonitor monitor = new ThreadMonitor(workers); // Tworzymy instancję monitorującego
-        Thread monitorThread = new Thread(monitor, "Monitor"); // Uruchamiamy wątek monitorujący
-        monitorThread.start(); // Startujemy wątek
+        ThreadMonitor monitor = new ThreadMonitor(workers);
+        Thread monitorThread = new Thread(monitor, "Monitor");
+        monitorThread.start();
 
-        // === Czekamy na zakończenie wszystkich workerów ===
         for (Thread worker : workers) {
             worker.join();
         }
 
-        // === ZAPIS JSON ===
         System.out.println("Wszystkie wątki zakończone. Zapisuję JSON...");
 
         ObjectMapper mapper = new ObjectMapper();
