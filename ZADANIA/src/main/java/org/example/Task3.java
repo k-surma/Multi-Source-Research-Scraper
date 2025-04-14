@@ -1,11 +1,11 @@
-package com.scraper;
+package org.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 // ZADANIE 3
 
-public class Main {
+public class Task3 {
 
     private static final int TOTAL_NUMBERS = 100;
     private static final int NUM_WORKERS = 4;

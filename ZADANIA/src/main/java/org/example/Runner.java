@@ -1,4 +1,4 @@
-package com.scraper;
+package org.example;
 
 // ZADANIE 2
 

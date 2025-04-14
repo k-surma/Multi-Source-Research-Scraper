@@ -1,4 +1,4 @@
-package com.scraper;
+package org.example;
 
 // KLASA DO ZADANIA 2 - TU NIC NIE UZUPEŁNIAMY
 
