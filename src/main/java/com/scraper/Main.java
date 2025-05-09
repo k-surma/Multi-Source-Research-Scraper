@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
-    private static final int NUM_WORKERS = 10;
+    private static final int NUM_WORKERS = 50;
 
     public static void main(String[] args) throws Exception {
 
