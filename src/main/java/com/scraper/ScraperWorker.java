@@ -31,9 +31,9 @@ public class ScraperWorker implements Runnable {
                 String content = doc.body().text();
                 resultQueue.add(new Article(url, title, content));
                 int done = counter.incrementAndGet();
-                System.out.println("[" + done + "/" + totalTasks + "] Processed: " + url);
+                System.out.println("[" + done + "/" + totalTasks + "] Przetworzony: " + url);
             } catch (Exception e) {
-                System.out.println("Failed to scrape: " + url + " due to " + e.getMessage());
+                System.out.println("Nie udalo sie zescrapowac URL: " + url + "; wyjatek: " + e.getMessage());
             }
         }
     }

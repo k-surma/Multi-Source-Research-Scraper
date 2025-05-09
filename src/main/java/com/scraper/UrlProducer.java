@@ -36,9 +36,9 @@ public class UrlProducer implements Runnable {
                         taskQueue.add(href);
                     }
                 }
-                System.out.println("URL Producer processed: " + baseUrl);
+                System.out.println("URL Producer przetworzyl: " + baseUrl);
             } catch (Exception e) {
-                System.out.println("Failed to process: " + baseUrl + " due to " + e.getMessage());
+                System.out.println("Nie udalo sie przetworzyc: " + baseUrl + "; wyjatek: " + e.getMessage());
             }
         }
     }
