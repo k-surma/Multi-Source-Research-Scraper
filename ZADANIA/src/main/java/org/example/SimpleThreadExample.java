@@ -21,17 +21,7 @@ public class SimpleThreadExample {
 
         // TODO 1: Utwórz wątek wypisujący liczby od 1 do 5
         Thread numberThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 1; i <= 5; i++) {
-                    System.out.println("Liczba: " + i);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            ...
         });
 
         // TODO 2: Utwórz wątek wypisujący litery od A do E
@@ -39,18 +29,12 @@ public class SimpleThreadExample {
             @Override
             public void run() {
                 for (char c = 'A'; c <= 'E'; c++) {
-                    System.out.println("Litera: " + c);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    ...
                 }
             }
         });
 
         // TODO 3: Uruchom oba wątki
-        numberThread.start();
-        letterThread.start();
+
     }
 }
