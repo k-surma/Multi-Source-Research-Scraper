@@ -31,9 +31,7 @@ public class Task3 {
         Random random = new Random();
 
         // TODO 1: Wygeneruj 100 losowych liczb z zakresu 1–1000 i dodaj je do listy "numbers"
-        for (int i = 0; i < TOTAL_NUMBERS; i++) {
-            numbers.add(random.nextInt(1000) + 1);
-        }
+        ...
 
         // TODO 2: Podziel listę na równe części i utwórz dla każdej osobny wątek
         //  (w podpunktach bardziej szczegółowe instrukcje)
@@ -48,23 +46,19 @@ public class Task3 {
             int end = (i + 1) * chunkSize;
 
             // TODO 2.1: Wyodrębnij fragment listy "numbers" — od indeksu start do end
-            List<Integer> sublist = numbers.subList(start, end);
+
             // TODO 2.2: Utwórz nowy obiekt SumWorker, przekaż mu fragment listy i numer wątku (i + 1)
-            SumWorker worker = new SumWorker(sublist, i + 1);
+
             // TODO 2.3: Stwórz nowy wątek z tym SumWorkerem i uruchom go (start())
-            Thread thread = new Thread(worker);
-            thread.start();
+
             // TODO 2.4: Dodaj wątek i obiekt SumWorker do odpowiednich list (threads i workers)
-            threads.add(thread);
-            workers.add(worker);
+
         }
 
 
         // TODO 3: Poczekaj na zakończenie działania wszystkich wątków — użyj metody join()
         // Przejdź pętlą po liście threads i dla każdego elementu wywołaj join()
-        for (Thread thread : threads) {
-            thread.join();
-        }
+
 
         // TODO 4: Oblicz sumę wszystkich wyników z wątków i wypisz ją
         // Przejdź po liście workers, pobierz z każdego sumę (getSum()) i dodaj do totalSum
@@ -72,9 +66,7 @@ public class Task3 {
         int totalSum = 0;
 
         // UZUPEŁNIJ powyższy krok 4 tutaj
-        for (SumWorker worker : workers) {
-            totalSum += worker.getSum();
-        }
+        ...
 
         System.out.println("Suma wszystkich liczb: " + totalSum);
     }
